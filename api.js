@@ -1,29 +1,33 @@
-// import * as request from 'superagent'
 import 'superagent-queue'
 
 require('es6-promise').polyfill();
+
 var superagentPromisePlugin = require('superagent-promise-plugin');
 var request = superagentPromisePlugin.patch(require('superagent'));
-
-import fetch from 'isomorphic-fetch'
 import Evaporate from 'evaporate'
 
+/*
+  This is for use with Django - ignore if using with node
+*/
 try {
   var csrf = document.getElementsByName("csrfmiddlewaretoken")[0].value;
   var end = request.Request.prototype.end;
-
   request.Request.prototype._end = function(fn) {
     return end.call(this, fn);
   };
-
   request.Request.prototype.end = function(fn) {
     this.set('X-CSRFToken', csrf);
     return end.call(this, fn);
   }
-
 }
 catch (err) {}
 
+
+/*
+  If your using with node you need to call
+
+  api.auth('token')
+*/
 export const auth = (token) => {
   global.token = token
   var end = request.Request.prototype.end;
@@ -66,7 +70,6 @@ export const endpoints = {
     pre_s3_upload: base + "pre_s3_upload/",
     post_s3_upload: base + "post_s3_upload/",
 }
-
 
 export function post(endpoint, data){
   return request
