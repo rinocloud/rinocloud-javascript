@@ -170,7 +170,7 @@ export function moveObject(targetParent, items){
 
 export function fetchBreadcrumbs(id){
   return request
-  .post('/api/1/files/ancestors/')
+  .post(config.base + '/api/1/files/ancestors/')
   .send({id: id})
   .then(processResponse)
 }
@@ -181,13 +181,13 @@ export function fetchBreadcrumbs(id){
 
 export function fetchInvites(){
   return request
-  .get('/api/1/users/get_invites/')
+  .get(config.base + '/api/1/users/get_invites/')
   .then(processResponse)
 }
 
 export function sendInvite(email){
   return request
-    .post( '/api/1/users/send_invite/')
+    .post(config.base + '/api/1/users/send_invite/')
     .send({email: email})
     .then(processResponse)
 }
@@ -201,7 +201,7 @@ export function reSendInvite(id){
 
 export function deleteInvite(id){
   return request
-    .post( '/api/1/users/delete_invite/')
+    .post(config.base + '/api/1/users/delete_invite/')
     .send({id: id})
     .then(processResponse)
 }
@@ -212,28 +212,28 @@ export function deleteInvite(id){
 
 export function fetchComments(objectId){
   return request
-  .post('/api/1/comments/list_comments/')
+  .post(config.base + '/api/1/comments/list_comments/')
   .send({"object_id": objectId})
   .then(processResponse)
 }
 
 export function createComment(objectId, value){
   return request
-    .post('/api/1/comments/create_comment/')
+    .post(config.base + '/api/1/comments/create_comment/')
     .send({object_pk: objectId, comment: value})
     .then(processResponse)
 }
 
 export function updateComment(commentId, value){
   return request
-    .post('/api/1/comments/update_comment/')
+    .post(config.base + '/api/1/comments/update_comment/')
     .send({id: commentId, comment: value})
     .then(processResponse)
 }
 
 export function deleteComment(commentId){
   return request
-    .post('/api/1/comments/delete_comment/')
+    .post(config.base + '/api/1/comments/delete_comment/')
     .send({id: commentId})
     .then(processResponse)
 }
@@ -245,7 +245,7 @@ export function deleteComment(commentId){
 
 export function query(query, limit=20, offset=0){
   return request
-    .post('/api/1/files/query/')
+    .post(config.base + '/api/1/files/query/')
     .send({
       query: query,
       limit: limit,
@@ -256,13 +256,13 @@ export function query(query, limit=20, offset=0){
 
 export function autocompleteQuery(){
   return request
-    .post('/api/1/files/autocomplete_search/')
+    .post(config.base + '/api/1/files/autocomplete_search/')
     .then(processResponse)
 }
 
 export function autocompleteValues(field){
   return request
-    .post('/api/1/files/autocomplete_values/')
+    .post(config.base + '/api/1/files/autocomplete_values/')
     .send({field: field})
     .then(processResponse)
 }

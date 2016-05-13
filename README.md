@@ -45,5 +45,4 @@ const complete = (err, response) => {
 }
 
 api.upload('./test.txt', {name:"test.txt"}, progress, complete)
-
 ```
