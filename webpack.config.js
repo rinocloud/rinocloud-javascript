@@ -1,39 +1,42 @@
-var path = require("path")
-var webpack = require('webpack')
-var BundleTracker = require('webpack-bundle-tracker')
+var webpack = require('webpack');
+var path = require('path');
+var fs = require('fs');
+
+var nodeModules = {
+  chokidar: 'commonjs chokidar',
+  electron: 'commonjs electron',
+};
+fs.readdirSync('node_modules')
+  .filter(function(x) {
+    return ['.bin'].indexOf(x) === -1;
+  })
+  .forEach(function(mod) {
+    nodeModules[mod] = 'commonjs ' + mod;
+  });
 
 module.exports = {
-  context: __dirname,
-
   entry: {
-          AppContainer: ['babel-polyfill', './static/js/AppContainer'],
-        },
-
-  output: {
-      path: path.resolve('./static/bundles/'),
-      filename: "[name].js",
+    api: __dirname + '/src/api.js'
   },
-
-  plugins: [
-    new BundleTracker({filename: './webpack-stats.json'}),
-  ],
-
+  devtool: 'sourcemap',
+  target: 'node',
+  externals: nodeModules,
+  output: {
+    path: __dirname + '/dist',
+    filename: '[name].js',
+    library: '[name]',
+    libraryTarget: 'umd',
+  },
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
-        exclude: /node_modules\/(?!qs)/,
-        loader: 'babel',
+        loader: "babel-loader",
+        test: /\.js?$/,
         query: {
-          presets: ['react', 'es2015']
+          presets: ['es2015'],
         }
       },
-      { test: /\.css$/, loader: "style-loader!css-loader" }
-    ],
-  },
-
-  resolve: {
-    modulesDirectories: ['node_modules', 'bower_components'],
-    extensions: ['', '.js', '.jsx']
-  },
-}
+      { test: /\.json$/, loader: "json" }
+    ]
+  }
+};
