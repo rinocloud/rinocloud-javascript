@@ -1,6 +1,6 @@
 {
-  "name": "rinocloud-watcher",
-  "version": "0.0.1",
+  "name": "rinocloud-javascript",
+  "version": "0.0.2",
   "description": "Rinocloud application to watch folders",
   "scripts": {
     "build": "webpack --progress --colors"
