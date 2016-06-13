@@ -9,6 +9,7 @@
     "type": "git",
     "url": "git+https://github.com/rinocloud/watcher.git"
   },
+  "main": "./dist/api.js",
   "keywords": [
     "rinocloud"
   ],
