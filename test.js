@@ -1,8 +1,32 @@
 
 import * as api from './src/api.js'
-api.auth('8186755009251ef0bbb273fbc86d7b9caa228374')
+api.auth('<token>')
 api.setBase('https://rinocloud.com')
 
-api.createObject({name: '123.txt'})
-  .then(console.log.bind(console))
-  .catch((err)=>{console.log(err.response.body)})
+import fs from 'fs'
+import pt from 'path'
+
+const progress = (total, loaded) => {
+  const p = loaded*100/total
+  console.log(`${p.toFixed(2)}%`)
+}
+
+const complete = (res) => {
+  console.log('complete')
+}
+
+const error = (err) => {
+  console.log(err)
+}
+
+const fpath = pt.join(__dirname, 'test.txt')
+
+let text = ''
+
+for (var i = 0; i < 1000000; i++) {
+    text += i + "\n";
+}
+
+fs.writeFileSync(fpath, text)
+api.s3uploadElectron(fpath, {name: 'test.txt'}, progress, error, complete)
+fs.unlinkSync(fpath)

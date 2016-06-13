@@ -1,11 +1,11 @@
-import 'superagent-queue'
-import Evaporate from 'evaporate'
-import superagent from 'superagent'
-import promisePlugin from 'superagent-promise-plugin'
 import fs from 'fs'
 import pt from 'path'
+import 'superagent-queue'
+import Evaporate from 'evaporate'
+import uploader from './uploader'
+import superagent from 'superagent'
+import promisePlugin from 'superagent-promise-plugin'
 
-var uploader = require('./uploader')
 let request = promisePlugin.patch(superagent)
 
 export let log = (s) => {
@@ -53,7 +53,7 @@ export const auth = (token) => {
   var end = request.Request.prototype.end;
 
   request.Request.prototype.end = function(fn) {
-    this.set('Authorization', 'Token ' + token);
+    // this.set('Authorization', 'Token ' + config.token);
     return end.call(this, fn);
   };
 }
@@ -66,6 +66,7 @@ Creation routes
 export function createObject(metadata){
   return request
   .post(config.base + '/api/1/files/create_object/')
+  .set('Authorization', 'Token ' + config.token)
   .send(metadata)
   .then(processResponse)
 }
@@ -73,6 +74,7 @@ export function createObject(metadata){
 export function createFolder(metadata){
   return request
   .post(config.base + '/api/1/files/create_folder/')
+  .set('Authorization', 'Token ' + config.token)
   .send(metadata)
   .then(processResponse)
 }
@@ -80,6 +82,7 @@ export function createFolder(metadata){
 export function createNotebook(metadata){
   return request
   .post(config.base + '/api/1/files/create_notebook/')
+  .set('Authorization', 'Token ' + config.token)
   .send(metadata)
   .then(processResponse)
 }
@@ -87,6 +90,7 @@ export function createNotebook(metadata){
 export function createEmpty(metadata){
   return request
   .post(config.base + '/api/1/files/create_empty/')
+  .set('Authorization', 'Token ' + config.token)
   .send(metadata)
   .then(processResponse)
 }
@@ -98,6 +102,7 @@ Retrieval routes
 export function getMetadata(id){
   return request
   .post(config.base + '/api/1/files/get_metadata/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: id})
   .then(processResponse)
 }
@@ -105,6 +110,7 @@ export function getMetadata(id){
 export function getChildren(id, limit=20, offset=0){
   return request
   .post(config.base + '/api/1/files/children/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: id, limit: limit, offset: offset})
   .then(processResponse)
 }
@@ -112,6 +118,7 @@ export function getChildren(id, limit=20, offset=0){
 export function getAncestors(id){
   return request
   .post(config.base + '/api/1/files/ancestors/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: id})
   .then(processResponse)
 }
@@ -125,6 +132,7 @@ export function updateMerge(id, metadata){
 
   return request
   .post(config.base + '/api/1/files/update_metadata/')
+  .set('Authorization', 'Token ' + config.token)
   .send(metadata)
   .then(processResponse)
 }
@@ -132,6 +140,7 @@ export function updateMerge(id, metadata){
 export function updateOverwrite(id, metadata){
   return request
   .post(config.base + '/api/1/files/update_metadata/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: id, metadata: metadata})
   .then(processResponse)
 }
@@ -139,6 +148,7 @@ export function updateOverwrite(id, metadata){
 export function deleteMetadataField(id, field){
   return request
   .post(config.base + '/api/1/files/delete_metadata_field/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: id, field: field})
   .then(processResponse)
 }
@@ -146,6 +156,7 @@ export function deleteMetadataField(id, field){
 export function deleteObject(id){
   return request
   .post(config.base + '/api/1/files/delete/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: id})
   .then(processResponse)
 }
@@ -155,6 +166,7 @@ export function moveObject(targetParent, items){
   // items is a list of ids to moveObject
   return request
   .post(config.base + '/api/1/files/delete/')
+  .set('Authorization', 'Token ' + config.token)
   .send({
     parent: targetId,
     items: moveIds
@@ -169,6 +181,7 @@ Breadcrumbs
 export function fetchBreadcrumbs(id){
   return request
   .post(config.base + '/api/1/files/ancestors/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: id})
   .then(processResponse)
 }
@@ -180,12 +193,14 @@ Invites
 export function fetchInvites(){
   return request
   .get(config.base + '/api/1/users/get_invites/')
+  .set('Authorization', 'Token ' + config.token)
   .then(processResponse)
 }
 
 export function sendInvite(email){
   return request
   .post(config.base + '/api/1/users/send_invite/')
+  .set('Authorization', 'Token ' + config.token)
   .send({email: email})
   .then(processResponse)
 }
@@ -200,6 +215,7 @@ export function reSendInvite(id){
 export function deleteInvite(id){
   return request
   .post(config.base + '/api/1/users/delete_invite/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: id})
   .then(processResponse)
 }
@@ -211,6 +227,7 @@ Comments
 export function fetchComments(objectId){
   return request
   .post(config.base + '/api/1/comments/list_comments/')
+  .set('Authorization', 'Token ' + config.token)
   .send({"object_id": objectId})
   .then(processResponse)
 }
@@ -218,6 +235,7 @@ export function fetchComments(objectId){
 export function createComment(objectId, value){
   return request
   .post(config.base + '/api/1/comments/create_comment/')
+  .set('Authorization', 'Token ' + config.token)
   .send({object_pk: objectId, comment: value})
   .then(processResponse)
 }
@@ -225,6 +243,7 @@ export function createComment(objectId, value){
 export function updateComment(commentId, value){
   return request
   .post(config.base + '/api/1/comments/update_comment/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: commentId, comment: value})
   .then(processResponse)
 }
@@ -232,6 +251,7 @@ export function updateComment(commentId, value){
 export function deleteComment(commentId){
   return request
   .post(config.base + '/api/1/comments/delete_comment/')
+  .set('Authorization', 'Token ' + config.token)
   .send({id: commentId})
   .then(processResponse)
 }
@@ -244,6 +264,7 @@ Query
 export function query(query, limit=20, offset=0){
   return request
   .post(config.base + '/api/1/files/query/')
+  .set('Authorization', 'Token ' + config.token)
   .send({
     query: query,
     limit: limit,
@@ -255,12 +276,14 @@ export function query(query, limit=20, offset=0){
 export function autocompleteQuery(){
   return request
   .post(config.base + '/api/1/files/autocomplete_search/')
+  .set('Authorization', 'Token ' + config.token)
   .then(processResponse)
 }
 
 export function autocompleteValues(field){
   return request
   .post(config.base + '/api/1/files/autocomplete_values/')
+  .set('Authorization', 'Token ' + config.token)
   .send({field: field})
   .then(processResponse)
 }
@@ -271,7 +294,7 @@ Uploading routes
 
 Currently we only support basic multiPartUpload for node.js
 
-- `multiPartUpload(path, data={}, progress, complete)`
+- `multiPartUpload(path, data={}, progress, error, complete)`
 path: file path
 data: object which contains metadata (must at least have name)
 progress: gets called with object containign loaded and total
@@ -287,16 +310,16 @@ const complete = (err, response) => {
   console.log(response.body)
 }
 
-api.multiPartUpload('./test.txt', {name:"example/test.txt"}, progress, complete)
+api.multiPartUpload('./test.txt', {name:"example/test.txt"}, progress, error, complete)
 ```
 
-- `s3uploadBrowser(file, data={}, progress, complete)`
+- `s3uploadBrowser(file, data={}, progress, error, complete)`
 file: html5 file object
 data: object which contains metadata (must at least have name)
 progress: gets called with object containign loaded and total
 complete: called with err, res when upload is finished
 
-- `s3uploadElectron(path, data={}, progress, complete)`
+- `s3uploadElectron(path, data={}, progress, error, complete)`
 path: path to file
 data: object which contains metadata (must at least have name)
 progress: gets called with object containign loaded and total
@@ -313,7 +336,6 @@ var File = function(path){
   this.size = stats["size"]
 
   this.buff = fs.readFileSync(path)
-
   this.slice = function(from_byte, to_byte){
     return this.buff.slice(from_byte, to_byte)
   }.bind(this)
@@ -321,7 +343,7 @@ var File = function(path){
   return this
 }
 
-export function s3postBrowser(file, name, progress, complete){
+export function s3postBrowser(file, name, progress, error, complete){
   const evap = new Evaporate({
     signerUrl: config.base + '/api/1/files/sign_s3/',
     aws_key: 'AKIAIMNS62CAOTEN53BA',
@@ -346,14 +368,12 @@ export function s3postBrowser(file, name, progress, complete){
       var requestDate = (new Date()).toISOString();
       xhr.setRequestHeader('Request-Header', requestDate);
     },
-    complete: () => {
-      complete(name)
-    },
+    complete: complete,
     progress: progress
   });
 }
 
-export function s3postElectron(file, name, progress, complete) {
+export function s3postElectron(file, name, progress, error, complete) {
 
   var up = new uploader({
     auth_url: config.base + '/api/1/files/sign_s3/',
@@ -365,50 +385,25 @@ export function s3postElectron(file, name, progress, complete) {
     bucket: 'rinocloud',
     aws_url: 'https://rinocloud.s3.amazonaws.com',
     aws_key_id: 'AKIAIMNS62CAOTEN53BA',
-    on_multipart_upload_complete: () => {
-      complete(name, null)
-    },
-    on_auth_error: function(xhr){
-      complete(null, xhr)
-    },
-    on_network_error: function(xhr){
-      complete(null, 'Network error')
-    },
-    on_non_200_error: function(xhr){
-      complete(null, xhr.statusText)
-    },
-    on_abort: function(xhr){
-      complete(null, xhr.statusText)
-    },
-    on_complete_multipart_error: (xhr)=>{
-      complete(null, xhr.statusText)
-    },
-    on_send_part_error: (xhr)=>{
-      complete(null, xhr.statusText)
-    },
-    on_absence_upload_id_error: (xhr)=>{
-      complete(null, xhr.statusText)
-    },
-    on_getting_upload_id_error: function(xhr){
-      complete(null, xhr.statusText)
-    },
-    on_progress: progress
+    on_complete: complete,
+    on_progress: progress,
+    on_error: error
   })
 
   up.init_multipart_upload()
 }
 
-export function s3uploadBrowser(file, data={}, progress, complete){
+export function s3uploadBrowser(file, data={}, progress, error, complete){
   /*
   Does a direct s3 upload from the browser
   */
-  const uploadFinished = (id, name) => {
+  const uploadFinished = (name, id) => {
     request
-    .post(config.base + '/api/1/files/post_s3_upload/')
-    .send({name: name, id: id})
-    .end((err, res) => {
-      complete(err, res)
-    })
+      .post(config.base + '/api/1/files/post_s3_upload/')
+      .set('Authorization', 'Token ' + config.token)
+      .send({name: name, id: id})
+      .then(complete)
+      .catch(error)
   }
 
   let name = file.name
@@ -417,19 +412,16 @@ export function s3uploadBrowser(file, data={}, progress, complete){
   data["name"] = name
   request
   .post(config.base + '/api/1/files/pre_s3_upload/')
+  .set('Authorization', 'Token ' + config.token)
   .send(data)
   .queue('pre_s3_upload')
-  .end((err, res) => {
-    if(!err) {
-      const id = res.body.data.id
-      s3postBrowser(file, res.body.upload_name, progress, (name) => {
-        uploadFinished(id, name)
-      })
-    }
+  .then((response)=>{
+    s3postBrowser(file, response.body.upload_name, progress, error, uploadFinished.bind(null, response.body.upload_name, response.body.data.id))
   })
+  .catch(error)
 }
 
-export function s3uploadElectron(path, data={}, progress, complete){
+export function s3uploadElectron(path, data={}, progress, error, complete){
   /*
   Does a direct s3 upload from electron.js takes a pure path as argument
   not a html5 file object
@@ -438,16 +430,13 @@ export function s3uploadElectron(path, data={}, progress, complete){
   */
 
   var file = new File(path)
-  const uploadFinished = (id, name, err) => {
-
-    if(err !== null) return complete(err, null)
-
+  const uploadFinished = (name, id) => {
     request
-    .post(config.base + '/api/1/files/post_s3_upload/')
-    .send({name: name, id: id})
-    .end((err, res) => {
-      complete(err, res)
-    })
+      .post(config.base + '/api/1/files/post_s3_upload/')
+      .set('Authorization', 'Token ' + config.token)
+      .send({name: name, id: id})
+      .then(complete)
+      .catch(error)
   }
 
   let name = file.name
@@ -456,31 +445,28 @@ export function s3uploadElectron(path, data={}, progress, complete){
   data["size"] = file.size
   data["name"] = name
   request
-  .post(config.base + '/api/1/files/pre_s3_upload/')
-  .send(data)
-  .queue('pre_s3_upload')
-  .end((err, res) => {
-    if(!err) {
-      s3postElectron(file, res.body.upload_name, progress, uploadFinished.bind(null, res.body.data.id))
-    }
-    else{
-      complete(err, res)
-    }
-  })
+    .post(config.base + '/api/1/files/pre_s3_upload/')
+    .set('Authorization', 'Token ' + config.token)
+    .send(data)
+    .queue('pre_s3_upload')
+    .then((response)=>{
+      s3postElectron(file, response.body.upload_name, progress, error, uploadFinished.bind(null, response.body.upload_name, response.body.data.id))
+    })
+    .catch(error)
+  }
 
-}
-
-export function multiPartUpload(path, data={}, progress, complete){
+export function multiPartUpload(path, data={}, progress, error, complete){
   /*
   Does a multipart upload direct to rinocloud.
   Doesnt handle large files. Only <50mb
   */
   return request
-  .post(config.base + '/api/1/files/upload_multipart/')
-  .queue('upload')
-  .attach('file', path)
-  .field('json', JSON.stringify(data))
-  // .field('json', data)
-  .on('progress', progress)
-  .end(complete)
+    .post(config.base + '/api/1/files/upload_multipart/')
+    .set('Authorization', 'Token ' + config.token)
+    .queue('upload')
+    .attach('file', path)
+    .field('json', JSON.stringify(data))
+    .on('progress', progress)
+    .then(complete)
+    .catch(error)
 }
