@@ -9,7 +9,7 @@ let request = promisePlugin.patch(superagent)
 function joinUrlElements() {
   var re1 = new RegExp('^\\/|\\/$','g'),
   elts = Array.prototype.slice.call(arguments);
-  return elts.map(function(element){return element.replace(re1,""); }).join('/');
+  return elts.map(function(element){return element.replace(re1, ""); }).join('/');
 }
 
 export default function(config){

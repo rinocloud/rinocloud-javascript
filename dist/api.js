@@ -430,7 +430,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var name = file.name;
 	  if (file.hasOwnProperty('fullPath')) name = file.fullPath;
 	  data["size"] = file.size;
-	  data["name"] = name;
 	  request.post(config.base + '/api/1/files/pre_s3_upload/').set('Authorization', 'Token ' + config.token).send(data).queue('pre_s3_upload').then(function (response) {
 	    s3postBrowser(file, response.body.upload_name, progress, error, uploadFinished.bind(null, response.body.upload_name, response.body.data.id));
 	  }).catch(error);
@@ -457,7 +456,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (file.hasOwnProperty('fullPath')) name = file.fullPath;
 	
 	  data["size"] = file.size;
-	  data["name"] = name;
 	  request.post(config.base + '/api/1/files/pre_s3_upload/').set('Authorization', 'Token ' + config.token).send(data).queue('pre_s3_upload').then(function (response) {
 	    s3postElectron(file, response.body.upload_name, progress, error, uploadFinished.bind(null, response.body.upload_name, response.body.data.id));
 	  }).catch(error);

@@ -409,7 +409,6 @@ export function s3uploadBrowser(file, data={}, progress, error, complete){
   let name = file.name
   if (file.hasOwnProperty('fullPath')) name = file.fullPath
   data["size"] = file.size
-  data["name"] = name
   request
   .post(config.base + '/api/1/files/pre_s3_upload/')
   .set('Authorization', 'Token ' + config.token)
@@ -443,7 +442,6 @@ export function s3uploadElectron(path, data={}, progress, error, complete){
   if (file.hasOwnProperty('fullPath')) name = file.fullPath
 
   data["size"] = file.size
-  data["name"] = name
   request
     .post(config.base + '/api/1/files/pre_s3_upload/')
     .set('Authorization', 'Token ' + config.token)
