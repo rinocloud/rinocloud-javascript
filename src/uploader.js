@@ -148,8 +148,6 @@ export default function(config){
   self._send_blob = function(signature, date_gmt, suffix, blob){
     const url = joinUrlElements(self.config.aws_url, '/' + self.config.file_name + suffix)
 
-    self.config.on_progress(self.total, self.loaded)
-
     request
       .put(url)
       .set('Authorization', 'AWS ' + self.config.aws_key_id + ':' + signature)
